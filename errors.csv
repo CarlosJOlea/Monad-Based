@@ -1,0 +1,10 @@
+row_index,column,code,message,raw_value
+3,row,WRONG_FIELDS,"Bad row: ['2025-09-02', 'Widget B', '1', '120', 'Cliente 2']","['2025-09-02', 'Widget B', '1', '120', 'Cliente 2']"
+4,row,WRONG_FIELDS,"Bad row: ['2025-09-03', 'Widget A', '10', '12.5', 'Cliente 3']","['2025-09-03', 'Widget A', '10', '12.5', 'Cliente 3']"
+5,row,WRONG_FIELDS,"Bad row: ['2025-09-04', 'Widget C', '5', '30', 'Cliente 4']","['2025-09-04', 'Widget C', '5', '30', 'Cliente 4']"
+6,row,WRONG_FIELDS,"Bad row: ['', 'Widget D', '3', '50', 'Cliente 5']","['', 'Widget D', '3', '50', 'Cliente 5']"
+7,row,WRONG_FIELDS,"Bad row: ['2025-09-05', 'Widget B', '2', '75.0', 'Cliente 6']","['2025-09-05', 'Widget B', '2', '75.0', 'Cliente 6']"
+8,date,INVALID_FORMAT,Invalid date: malformed,malformed
+8,quantity,INVALID_INTEGER,Invalid quantity: without,without
+8,price,INVALID_NUMBER,Invalid price: enough,enough
+9,row,WRONG_FIELDS,"Bad row: ['2025-09-06', 'Widget E', '1', '200', 'Cliente 7']","['2025-09-06', 'Widget E', '1', '200', 'Cliente 7']"
