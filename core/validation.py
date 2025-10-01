@@ -38,11 +38,6 @@ class Validation(Generic[T, E]):
                 return Validation.failure([str(e)])
         return self
 
-    def apply(self, other: "Validation[Callable[[T], T], E]") -> "Validation[T, E]":
-        if self.is_success() and other.is_success():
-            return Validation.success(other._value(self._value))
-        else:
-            return Validation.failure(self._errors + other._errors)
 
     def bind(self, func: Callable[[T], "Validation[T, E]"]) -> "Validation[T, E]":
         """
