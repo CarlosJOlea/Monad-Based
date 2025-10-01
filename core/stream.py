@@ -32,11 +32,6 @@ class Stream(Generic[T]):
         """Crea un Stream a partir de cualquier iterable (lista, set, tuple, etc.)."""
         return cls(iterable)
 
-    @classmethod
-    def from_generator(cls, gen_func: Callable[[], Iterator[T]]) -> "Stream[T]":
-        """Crea un Stream a partir de una función generadora (lazy)."""
-        return cls(gen_func())
-
     # -----------------------
     # Transformaciones
     # -----------------------
@@ -91,14 +86,3 @@ class Stream(Generic[T]):
     def to_list(self) -> List[T]:
         """Convierte el Stream a lista (forzando la evaluación)."""
         return list(self.source)
-
-    def for_each(self, func: Callable[[T], None]) -> None:
-        """Ejecuta una función para cada elemento (efecto final)."""
-        for x in self.source:
-            func(x)
-
-    def to_file(self, path: str, formatter: Callable[[T], str] = str) -> None:
-        """Escribe el contenido del Stream a un archivo de texto."""
-        with open(path, "w", encoding="utf-8") as f:
-            for x in self.source:
-                f.write(formatter(x) + "\n")
