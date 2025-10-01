@@ -34,30 +34,10 @@ class Result(Generic[T, E]):
     def is_failure(self) -> bool:
         return self.result_type == ResultType.FAILURE
 
-    def map(self, func: Callable[[T], T]) -> "Result[T, E]":
-        if self.is_success():
-            try:
-                return Result.success(func(self._value))
-            except Exception as e:
-                return Result.failure(str(e))
-        return self
-
-    def bind(self, func: Callable[[T], "Result[T, E]"]) -> "Result[T, E]":
-        if self.is_success():
-            try:
-                return func(self._value)
-            except Exception as e:
-                return Result.failure(str(e))
-        return self
-
     def fold(self, on_success: Callable[[T], T], on_failure: Callable[[E], T]) -> T:
         return on_success(self._value) if self.is_success() else on_failure(self._error)
-
-    def get_or_else(self, default: T) -> T:
-        return self._value if self.is_success() else default
 
     def get_value(self) -> Union[T, None]:
         return self._value if self.is_success() else None
 
-    def get_error(self) -> Union[E, None]:
-        return self._error if self.is_failure() else None
+
