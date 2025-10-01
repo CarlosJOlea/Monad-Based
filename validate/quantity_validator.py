@@ -3,33 +3,28 @@ from core.validation import Validation
 from core.errors import ValidationError
 
 def validate_quantity(value: str) -> Validation[int, ValidationError]:
-    # --- Reglas de formato ---
     def check_integer(v: str):
         try:
-            n = int(v)
-            return [], n  # sin errores, devuelve el valor convertido
+            return Validation.success(int(v))
         except ValueError:
-            return [ValidationError("quantity", "INVALID_INTEGER", f"Invalid quantity: {v}", v)], None
+            return Validation.failure([
+                ValidationError("quantity", "INVALID_INTEGER", f"Invalid quantity: {v}", v)
+            ])
 
-    # --- Reglas de negocio (requieren el int) ---
     def check_positive(n: int):
-        return [] if n > 0 else [
-            ValidationError("quantity", "NON_POSITIVE", "Must be > 0", n)
-        ]
+        return (Validation.success(n)
+            if n > 0 else
+            Validation.failure([
+                ValidationError("quantity", "NON_POSITIVE", "Must be > 0", n)
+            ])
+        )
 
-    # 1. Corremos las reglas de formato
-    int_errors, parsed = check_integer(value)
-    if int_errors:
-        return Validation.failure(int_errors)
-
-    # 2. Corremos las reglas de negocio con Stream
-    errors = (
-        Stream.from_iterable([check_positive])
-        .flat_map(lambda rule: rule(parsed))  # ya es seguro, parsed es int
-        .to_list()
-    )
-
+    # pipeline 100% funcional
     return (
-        Validation.failure(errors) if errors
-        else Validation.success(parsed)
+        check_integer(value)       # Validation[int]
+        .bind(lambda n:            # si fue válido, seguimos
+            Stream.from_iterable([check_positive])
+            .map(lambda rule: rule(n))  # Stream[Validation[int]]
+            .reduce(lambda acc, v: acc if acc.is_failure() else v, Validation.success(n))
+        )
     )
